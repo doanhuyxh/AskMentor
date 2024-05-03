@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AskMentor.Controllers.api
 {
@@ -87,6 +88,7 @@ namespace AskMentor.Controllers.api
             foreach (var userRole in userRoles)
             {
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+
             }
 
             string token = GenerateToken(authClaims);
@@ -105,6 +107,7 @@ namespace AskMentor.Controllers.api
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
+
             return Ok(new { status = true, message = "", token = token, role = userRoles });
         }
 
@@ -141,6 +144,7 @@ namespace AskMentor.Controllers.api
             return Ok(new { status = true, message = "Đã đăng xuất thành công" });
         }
 
+
         //[HttpGet]
         //public async Task<IActionResult> Get()
         //{
@@ -150,5 +154,34 @@ namespace AskMentor.Controllers.api
 
         //    return Ok(new { status = true, });
         //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> Add()
+        //{
+        //    var user = new ApplicationUser
+        //    {
+        //        UserName = "admin@gmail.com",
+        //        Email = "admin@gmail.com",
+        //        PhoneNumber = "",
+        //        Discriminator = "",
+        //        Name = "admin",
+        //        Gender = "",
+        //        Avt = "",
+        //        Certification = "",
+        //    };
+
+        //    var result = await this.userManager.CreateAsync(user, "123456789Admin@");
+
+        //    if (result.Succeeded)
+        //    {
+        //        await userManager.AddToRoleAsync(user, "Admin");
+        //        return Ok(new { status = true, message = "User created successfully" });
+        //    }
+        //    else
+        //    {
+        //        return Ok(new { status = false, message = result.Errors.FirstOrDefault().Description });
+        //    }
+        //}
+
     }
 }

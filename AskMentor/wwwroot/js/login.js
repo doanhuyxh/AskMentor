@@ -40,7 +40,7 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
 
 function HandleEmail() {
     let email = document.getElementById("email2").value;
-    let pass = prompt("Password")
+    let pass = document.getElementById("pass").value;
 
     fetch('/api/Authencation/login', {
         method: 'POST',
@@ -56,7 +56,13 @@ function HandleEmail() {
         .then(data => {
             if (data.status === true) {
                 localStorage.setItem('token', data.token);
-                window.location.href = '/Home/Leaner';
+
+                if (data.role.includes("Admin")) {
+                    window.location.href = '/Admin/Index';
+                } else {
+                    window.location.href = '/Home/Leaner';
+                }
+
             } else {
                 // Hiển thị thông báo lỗi
                 alert(data.message);

