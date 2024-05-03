@@ -1,0 +1,97 @@
+﻿@model List<Libs.Entity.ApplicationUser>
+
+@section Styles {
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <style>
+        #content_chat {
+            max-height: 20em;
+            overflow-y: scroll;
+        }
+    </style>
+}
+
+<section style="margin-bottom:20em; margin-top:8em;">
+
+    <div class="container d-flex justify-content-around">
+        <div class="" style="width:60%">
+            @if (Model != null && Model.Count > 0)
+            {
+                <div class=" row">
+                    @foreach (var mentor in Model)
+                    {
+                        @if (@mentor.Id != ViewBag.userId)
+                        {
+                            <div class="col p-3">
+                                <div class="card" style="width: 10rem;">
+                                    <img src="https://i.pravatar.cc/300" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@mentor.Name</h5>
+                                        <p class="btn btn-primary" onclick="ChoseUser('@mentor.Id', '@mentor.Name')">Nhắn tin</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <option value="">No mentors found</option>
+            }
+        </div>
+
+        <div class="d-none" id="chat-container" style="width:30%">
+
+            <div class="rounded-pill border-1 border border-primary p-2">
+                <div>
+                    <h2 class="text-black fs-5 text-center" id="nameMentor"></h2>
+                </div>
+            </div>
+            <div class="mt-2">
+                <ul class="list-group" id="content_chat">
+                </ul>
+            </div>
+
+            <div>
+                <div class="my-2">
+                    <input class="form-control" placeholder="input here" id="input_chat" />
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script src="/js/site.js"></script>
+
+<script>
+    "use strict";
+
+    var RoomId = 0;
+    var toId = "";
+    var FromId = '@ViewBag.userId';
+
+    console.log("@Html.Raw(ViewBag.userId)");
+
+    function ChoseUser(toId, name) {
+
+        connection.invoke("JoinRom", '@ViewBag.userId', toId).
+            then(data => {
+                $("#chat-container").removeClass("d-none")
+                $("#nameMentor").text(name)
+            })
+            .catch(function (err) {
+
+                setTimeout(() => {
+                    ChoseUser(toId, name)
+                }, 2000)
+
+                return console.error(err.toString());
+            });
+    }
+
+
+</script>
