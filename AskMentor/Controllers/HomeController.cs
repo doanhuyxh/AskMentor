@@ -38,7 +38,7 @@ namespace AskMentor.Controllers
         }
 
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> Mentor()
+        public async Task<IActionResult> Chat()
         {
             string userId = await helper.GetUserId(User.Identity.Name);
             ViewBag.userId = userId;

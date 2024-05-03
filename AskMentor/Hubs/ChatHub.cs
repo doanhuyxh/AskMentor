@@ -1,13 +1,17 @@
-﻿namespace AskMentor.Hubs
+﻿using Libs.Entity;
+
+namespace AskMentor.Hubs
 {
     public class ChatHub : Hub
     {
         private readonly MessageService messageService;
         private readonly RoomService roomService;
-        public ChatHub(MessageService messageService, RoomService roomService)
+        private readonly AskMentor.Helper.Helper _helper;
+        public ChatHub(MessageService messageService, RoomService roomService, AskMentor.Helper.Helper helper)
         {
             this.messageService = messageService;
             this.roomService = roomService;
+            _helper = helper;
         }
         public async Task SendMessage(string fromId, string toId, int roomId, string message)
         {
@@ -45,6 +49,13 @@
                 messages = messageService.getMessageListByRomId(room.Id, 20, 0);
             }
             await Clients.All.SendAsync("History", fromId, toId, room.Id, messages);
+        }
+
+        public async Task GetName(string userId, string fromId)
+        {
+
+            string name = await _helper.GetNameUserById(userId);
+            await Clients.All.SendAsync("NameUser", fromId, name);
         }
     }
 }
