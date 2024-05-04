@@ -18,7 +18,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 // Adding Jwt Bearer  
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
@@ -38,6 +38,7 @@ builder.Services.AddAuthentication(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages();
 
 
 //api controller

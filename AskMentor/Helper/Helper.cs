@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.IO;
 
 namespace AskMentor.Helper
 {
@@ -6,10 +7,13 @@ namespace AskMentor.Helper
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext context;
-        public Helper(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        private readonly IWebHostEnvironment _env;
+
+        public Helper(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IWebHostEnvironment env)
         {
             _userManager = userManager;
             this.context = context;
+            _env = env;
         }
 
         public async Task<List<ApplicationUser>> GetUserByRole(string role)
@@ -33,6 +37,86 @@ namespace AskMentor.Helper
         {
             ApplicationUser user = await _userManager.FindByIdAsync(id);
             return user.Name;
+        }
+
+        public string GetTopicNameById(int id)
+        {
+            Topic topic = context.Topics.FirstOrDefault(i => i.Id == id);
+            return topic.Name;
+        }
+        public string GetFieldNameById(int id)
+        {
+            Field field = context.Fields.FirstOrDefault(i => i.Id == id);
+            return field.Name;
+        }
+
+        public async Task<string> UpLoadAvatar(IFormFile file)
+        {
+            string path = string.Empty;
+            if (file != null)
+            {
+                string file_name = $"{DateTime.Now.Ticks.ToString()}{Path.GetExtension(file.FileName)}";
+                string uploadsFolder = Path.Combine(_env.ContentRootPath, "wwwroot/upload/avatar", file_name);
+
+                if (file.FileName == null)
+                    path = "img.png";
+                else
+                    path = uploadsFolder;
+                string filePath = Path.Combine(uploadsFolder, path);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+                return $"/upload/avatar/{file_name}";
+            }
+            else
+            {
+                return path;
+            }
+
+        }
+
+        public async Task<string> UpLoadCertificate(IFormFile file)
+        {
+            string path = string.Empty;
+
+            if (file != null)
+            {
+                string file_name = $"{DateTime.Now.Ticks.ToString()}{Path.GetExtension(file.FileName)}";
+                string uploadsFolder = Path.Combine(_env.ContentRootPath, "wwwroot/upload/certificate", file_name);
+
+                if (file.FileName == null)
+                    path = "img.png";
+                else
+                    path = uploadsFolder;
+                string filePath = Path.Combine(uploadsFolder, path);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+                return $"/upload/certificate/{file_name}";
+            }
+            else
+            {
+                return path;
+            }
+        }
+
+        public async Task<string> GetUserRoleByEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                // Nếu người dùng có nhiều vai trò, bạn có thể xử lý nhiều vai trò ở đây
+                if (roles.Any())
+                {
+                    return roles.First(); // Trả về vai trò đầu tiên của người dùng
+                }
+            }
+
+            return null; // Trả về null nếu không tìm thấy người dùng hoặc người dùng không có vai trò nào
         }
 
 

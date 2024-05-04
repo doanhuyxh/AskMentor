@@ -7,6 +7,7 @@ global using System.Security.Claims;
 global using System.Text;
 global using Libs;
 global using Libs.Entity;
+global using Libs.ViewModel;
 global using Libs.Services;
 global using Microsoft.EntityFrameworkCore;
 global using AskMentor.Hubs;

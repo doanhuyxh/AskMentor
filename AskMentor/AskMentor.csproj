@@ -34,4 +34,9 @@
 		<ProjectReference Include="..\Libs\Libs.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\upload\avatar\" />
+	  <Folder Include="wwwroot\upload\certificate\" />
+	</ItemGroup>
+
 </Project>

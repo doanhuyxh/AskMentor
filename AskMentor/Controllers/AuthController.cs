@@ -23,6 +23,12 @@ namespace AskMentor.Controllers
             return View();
         }
 
+        public IActionResult EditProfile()
+        {
+            ViewBag.Auth = "Auth";
+            return View();
+        }
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

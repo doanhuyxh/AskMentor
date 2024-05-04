@@ -13,18 +13,24 @@ namespace AskMentor.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly AskMentor.Helper.Helper helper;
         private readonly RoomService roomService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, Helper.Helper helper, RoomService roomService)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, Helper.Helper helper, RoomService roomService, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _userManager = userManager;
             _dbContext = context;
             this.helper = helper;
             this.roomService = roomService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index()
         {
+            if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.IsAuthenticated = true;
+            }
             return View();
         }
 

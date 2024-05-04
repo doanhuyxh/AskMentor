@@ -55,12 +55,13 @@ function HandleEmail() {
         .then(response => response.json())
         .then(data => {
             if (data.status === true) {
+
                 localStorage.setItem('token', data.token);
 
                 if (data.role.includes("Admin")) {
                     window.location.href = '/Admin/Index';
                 } else {
-                    window.location.href = '/Home/Leaner';
+                    window.location.href = '/';
                 }
 
             } else {

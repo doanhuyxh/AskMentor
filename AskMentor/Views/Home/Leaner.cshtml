@@ -1,4 +1,5 @@
 ﻿@model List<Libs.Entity.ApplicationUser>
+@inject AskMentor.Helper.Helper _helper;
 
 @section Styles {
     <link rel="stylesheet" href="/assets/css/style.css">
@@ -26,12 +27,14 @@
                                 </span>
                             </div>
                             <div class="air3-presence-container">
-                                <img width="128" height="128" src="/assets/img/avatar.jpeg"
+                                <img width="128" height="128" src="@(mentor.Avt != "" ? mentor.Avt : "/assets/img/avatar.jpeg")"
                                      class="air3-avatar air3-avatar-128" alt="">
                             </div>
                             <div class="name-mentor text-center">
                                 <p class="name-main">@mentor.Name</p>
-                                <span class="sub">Java Developer</span>
+                                <span class="sub">
+                                    @(mentor.TopicId != null ? _helper.GetFieldNameById(mentor.FileId ?? 0) : "Java Developer")
+                                </span>
                             </div>
                             <div class="star-and-job">
                                 <div class="star-ratting">

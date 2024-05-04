@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authentication;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using Microsoft.AspNetCore.Identity;
 
 namespace AskMentor.Controllers.api
 {
@@ -9,34 +11,39 @@ namespace AskMentor.Controllers.api
     [ApiController]
     public class AuthencationController : ControllerBase
     {
-        private UserManager<ApplicationUser> userManager;
-        private RoleManager<IdentityRole> roleManager;
-        private IConfiguration _configuration;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IConfiguration _configuration;
+        private readonly Helper.Helper _helper;
 
-        public AuthencationController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthencationController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, Helper.Helper helper)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this._configuration = configuration;
+            _helper = helper;
         }
         [HttpPost("register")]
-        public async Task<IActionResult> Registeration(User model)
+        public async Task<IActionResult> Registeration([FromForm] User model)
         {
             ApplicationUser userExists = await this.userManager.FindByEmailAsync(model.Email);
             if (userExists != null)
             {
                 return Ok(new { status = false, message = "Email already exists" });
             }
+
             var user = new ApplicationUser
             {
                 UserName = model.Email,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber ?? "",
-                Discriminator = "",
+                Address = model.Address,
                 Name = model.Name,
                 Gender = "",
-                Avt = "",
+                Avt = await _helper.UpLoadAvatar(model.Avt),
                 Certification = "",
+                Major = model.Major ?? "",
+                University = model.University ?? "",
             };
 
             var result = await this.userManager.CreateAsync(user, model.Password);
@@ -144,6 +151,44 @@ namespace AskMentor.Controllers.api
             return Ok(new { status = true, message = "Đã đăng xuất thành công" });
         }
 
+        [HttpPost("upload_avatar")]
+        public async Task<IActionResult> UploadAvatar([FromForm] FileUpload file)
+        {
+            string path = await _helper.UpLoadAvatar(file.file);
+            return Ok(new { status = true, message = "", data = path });
+        }
+
+        [HttpPost("upload_certificate")]
+        public async Task<IActionResult> UploadCertificate([FromForm] FileUpload file)
+        {
+            string path = await _helper.UpLoadCertificate(file.file);
+            return Ok(new { status = true, message = "", data = path });
+        }
+
+        [HttpPost("update_user")]
+        public async Task<IActionResult> UpdateUser(UpdateUserInfo vm)
+        {
+            ApplicationUser user = await userManager.FindByEmailAsync(vm.Email);
+            user.TopicId = vm.TopicId;
+            user.FileId = vm.FileId;
+            user.Certification = vm.certificate;
+            await userManager.UpdateAsync(user);
+
+            return Ok(new { status = true, message = "", data = "" });
+        }
+
+        //[HttpGet]
+        //public async Task<IActionResult> Delte(string email)
+        //{
+        //    var user = await userManager.FindByEmailAsync(email);
+
+        //    if (user != null)
+        //    {
+        //        await userManager.DeleteAsync(user);
+        //    }
+
+        //    return Ok(new { status = true, message = "", data = "" });
+        //}
 
         //[HttpGet]
         //public async Task<IActionResult> Get()
@@ -155,33 +200,32 @@ namespace AskMentor.Controllers.api
         //    return Ok(new { status = true, });
         //}
 
-        [HttpGet]
-        public async Task<IActionResult> Add()
-        {
-            var user = new ApplicationUser
-            {
-                UserName = "admin@gmail.com",
-                Email = "admin@gmail.com",
-                PhoneNumber = "",
-                Discriminator = "",
-                Name = "admin",
-                Gender = "",
-                Avt = "",
-                Certification = "",
-            };
+        //[HttpGet]
+        //public async Task<IActionResult> Add()
+        //{
+        //    var user = new ApplicationUser
+        //    {
+        //        UserName = "admin@gmail.com",
+        //        Email = "admin@gmail.com",
+        //        PhoneNumber = "",
+        //        Name = "admin",
+        //        Gender = "",
+        //        Avt = "",
+        //        Certification = "",
+        //    };
 
-            var result = await this.userManager.CreateAsync(user, "123456789Admin@");
+        //    var result = await this.userManager.CreateAsync(user, "123456789Admin@");
 
-            if (result.Succeeded)
-            {
-                await userManager.AddToRoleAsync(user, "Admin");
-                return Ok(new { status = true, message = "User created successfully" });
-            }
-            else
-            {
-                return Ok(new { status = false, message = result.Errors.FirstOrDefault().Description });
-            }
-        }
+        //    if (result.Succeeded)
+        //    {
+        //        await userManager.AddToRoleAsync(user, "Admin");
+        //        return Ok(new { status = true, message = "User created successfully" });
+        //    }
+        //    else
+        //    {
+        //        return Ok(new { status = false, message = result.Errors.FirstOrDefault().Description });
+        //    }
+        //}
 
     }
 }
