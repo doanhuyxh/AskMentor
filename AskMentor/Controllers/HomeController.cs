@@ -14,8 +14,9 @@ namespace AskMentor.Controllers
         private readonly AskMentor.Helper.Helper helper;
         private readonly RoomService roomService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly TopicService _topicService;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, Helper.Helper helper, RoomService roomService, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationDbContext context, Helper.Helper helper, RoomService roomService, IHttpContextAccessor httpContextAccessor, TopicService topicService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -23,6 +24,7 @@ namespace AskMentor.Controllers
             this.helper = helper;
             this.roomService = roomService;
             _httpContextAccessor = httpContextAccessor;
+            _topicService = topicService;
         }
 
         public IActionResult Index()
@@ -41,6 +43,30 @@ namespace AskMentor.Controllers
             ViewBag.userId = userId;
             List<ApplicationUser> Mentors = await helper.GetUserByRole("Mentor");
             return View(Mentors);
+        }
+
+
+        [HttpGet("field/{id}")]
+        public async Task<IActionResult> Field(int id)
+        {
+
+            List<Topic> topics = _topicService.getTopicsListByFieldId(id);
+            return View(topics);
+        }
+        [HttpGet("topic/{id}")]
+        public async Task<IActionResult> Topic(int id)
+        {
+
+            List<ApplicationUser> Mentors = await helper.GetUserByRole("Mentor");
+            List<ApplicationUser> MentorsInTopic = new List<ApplicationUser>();
+            foreach (var item in Mentors)
+            {
+                if (item.TopicId == id)
+                {
+                    MentorsInTopic.Add(item);
+                }
+            }
+            return View(MentorsInTopic);
         }
 
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]

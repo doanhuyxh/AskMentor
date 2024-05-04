@@ -1,4 +1,6 @@
-﻿@if (ViewBag.Auth == "Auth")
+﻿@inject AskMentor.Helper.Helper _helper;
+
+@if (ViewBag.Auth == "Auth")
 {
     <header>
         <div class="top-header">
@@ -292,23 +294,15 @@ else
                 </div>
             </div>
         </div>
+
         <div class="bottom-header">
             <ul class="nav-bottom d-flex">
-                <li>
-                    <a href="javascript:void(0)">Development & IT</a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">AI Services</a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">Design & Creative</a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">Sales & Marketing</a>
-                </li>
-                <li>
-                    <a href="javascript:void(0)">Admin & Customer Support</a>
-                </li>
+                @foreach (var item in _helper.GetFields(0, 5))
+                {
+                    <li>
+                        <a href="/field/@item.Id">@item.Name</a>
+                    </li>
+                }
                 <li class="position-relative" id="moreWork">
                     <a href="javascript:void(0)" class="more">
                         More
@@ -317,27 +311,13 @@ else
                         </span>
                     </a>
                     <ul class="nav-dropdown-menu">
-                        <li>
-                            <a href="/cat/writing-translation" class="up-n-link nav-menu-item">
-                                Writing &amp;
-                                Translation
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/cat/finance-accounting" class="up-n-link nav-menu-item">
-                                Finance &amp;
-                                Accounting
-                            </a>
-                        </li>
-                        <li><a href="/cat/hr-training" class="up-n-link nav-menu-item">HR &amp; Training</a></li>
-                        <li><a href="/cat/legal" class="up-n-link nav-menu-item">Legal</a></li>
-                        <li>
-                            <a href="/cat/engineering-architecture" class="up-n-link nav-menu-item">
-                                Engineering &amp;
-                                Architecture
-                            </a>
-                        </li>
-                        <li><a href="/hire/" class="up-n-link nav-menu-item">See all specializations</a></li>
+                        @foreach (var item in _helper.GetFields(5, 5))
+                        {
+                            <li>
+                                <a href="/field/@item.Id">@item.Name</a>
+                            </li>
+                        }
+                        <li><a href="" class="up-n-link nav-menu-item">See all specializations</a></li>
                     </ul>
                 </li>
             </ul>

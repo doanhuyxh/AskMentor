@@ -21,6 +21,10 @@ namespace Libs.Services
         {
             return TopicRepository.getTopicsList();
         }
+        public List<Topic> getTopicsListByFieldId(int fieldId)
+        {
+            return TopicRepository.getTopicsListByFieldId(fieldId);
+        }
         public Topic getTopicById(int id)
         {
             return this.TopicRepository.getTopicById(id);

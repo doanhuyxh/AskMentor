@@ -20,9 +20,17 @@ namespace AskMentor.Helper
         {
             return (List<ApplicationUser>)await _userManager.GetUsersInRoleAsync(role);
         }
+        public List<ApplicationUser> GetUserByTopic(int topicId, int skip, int take)
+        {
+            return context.ApplicationUser.Where(i => i.TopicId == topicId).Skip(skip).Take(take).ToList();
+        }
 
         public async Task<string> GetUserId(string email)
         {
+            if (email == null || email == "")
+            {
+                return string.Empty;
+            }
             ApplicationUser user = await _userManager.FindByEmailAsync(email);
             return user.Id;
         }
@@ -119,6 +127,19 @@ namespace AskMentor.Helper
             return null; // Trả về null nếu không tìm thấy người dùng hoặc người dùng không có vai trò nào
         }
 
+        public List<Topic> GetTopics(int skip, int take)
+        {
+            return context.Topics.Skip(skip).Take(take).ToList();
+        }
+        public List<Topic> GetTopicsByFieldId(int fieldId, int skip, int take)
+        {
+            return context.Topics.Where(i => i.FieldId == fieldId).Skip(skip).Take(take).ToList();
+        }
+
+        public List<Field> GetFields(int skip, int take)
+        {
+            return context.Fields.Skip(skip).Take(take).ToList();
+        }
 
     }
 }

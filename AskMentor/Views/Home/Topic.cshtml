@@ -72,12 +72,22 @@
                                     <span> RESTful Architecture</span>
                                 </div>
                             </div>
-                            <div class="chat-now-btn mt-3">
-                                <button class="chat-now" onclick="ChoseUser('@mentor.Id')">
-                                    Chat Now
-                                </button>
-                            </div>
-
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="chat-now-btn mt-3">
+                                    <button class="chat-now" onclick="ChoseUser('@mentor.Id')">
+                                        Chat Now
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="chat-now-btn mt-3">
+                                    <button onclick="resgister()" class="chat-now">
+                                        Chat Now
+                                    </button>
+                                </div>
+                            }
                         </a>
                     </div>
                 }
@@ -89,28 +99,22 @@
 @section Scripts {
 
 
-    <script src="/js/site.js"></script>
-
+    <script src="~/js/site.js"></script>
     <script>
         "use strict";
-
         var RoomId = 0;
         var toId = "";
-        var FromId = '@ViewBag.userId';
+        var FromId = '@await _helper.GetUserId(User.Identity.Name)';
 
+        console.log("FromId::", FromId)
 
-        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-
-        connection.start().then(function () {
-            console.log("connection success")
-        }).catch(function (err) {
-            console.log("connection err:::", err)
-            return;
-        });
+        function resgister() {
+            window.location.href = "/Auth/Register"
+        }
 
         function ChoseUser(toId) {
 
-            connection.invoke("JoinRom", '@ViewBag.userId', toId).
+            connection.invoke("JoinRom", FromId, toId).
                 then(data => {
                     window.location.href = "/Home/Chat"
                 })
