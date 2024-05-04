@@ -155,33 +155,33 @@ namespace AskMentor.Controllers.api
         //    return Ok(new { status = true, });
         //}
 
-        //[HttpGet]
-        //public async Task<IActionResult> Add()
-        //{
-        //    var user = new ApplicationUser
-        //    {
-        //        UserName = "admin@gmail.com",
-        //        Email = "admin@gmail.com",
-        //        PhoneNumber = "",
-        //        Discriminator = "",
-        //        Name = "admin",
-        //        Gender = "",
-        //        Avt = "",
-        //        Certification = "",
-        //    };
+        [HttpGet]
+        public async Task<IActionResult> Add()
+        {
+            var user = new ApplicationUser
+            {
+                UserName = "admin@gmail.com",
+                Email = "admin@gmail.com",
+                PhoneNumber = "",
+                Discriminator = "",
+                Name = "admin",
+                Gender = "",
+                Avt = "",
+                Certification = "",
+            };
 
-        //    var result = await this.userManager.CreateAsync(user, "123456789Admin@");
+            var result = await this.userManager.CreateAsync(user, "123456789Admin@");
 
-        //    if (result.Succeeded)
-        //    {
-        //        await userManager.AddToRoleAsync(user, "Admin");
-        //        return Ok(new { status = true, message = "User created successfully" });
-        //    }
-        //    else
-        //    {
-        //        return Ok(new { status = false, message = result.Errors.FirstOrDefault().Description });
-        //    }
-        //}
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, "Admin");
+                return Ok(new { status = true, message = "User created successfully" });
+            }
+            else
+            {
+                return Ok(new { status = false, message = result.Errors.FirstOrDefault().Description });
+            }
+        }
 
     }
 }

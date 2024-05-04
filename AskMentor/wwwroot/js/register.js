@@ -53,6 +53,9 @@ function CreateAcc() {
             // Xử lý dữ liệu trả về từ API ở đây
             console.log(data);
             alert(data.message)
+            setTimeout(() => {
+                window.location.href = "/Auth/Login"
+            }, 1000)
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
