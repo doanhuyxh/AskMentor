@@ -1,6 +1,4 @@
-﻿@model List<Libs.Entity.Topic>;
-@inject AskMentor.Helper.Helper _helper;
-@section Styles {
+﻿@section Styles {
     <link rel="stylesheet" href="/assets/css/style.css">
 }
 
@@ -39,34 +37,68 @@
 
         <div class="container">
             <div class="row">
-                @if (Model.Count > 0)
-                {
-                    @foreach (var item in Model)
-                    {
-                        <div class="col">
-                            <div class="card" style="width: 18rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">@item.Name</h5>
-                                    <a href="/topic/@item.Id" class="btn btn-primary">
-                                        <div class="d-flex justify-content-start gap-2">
-                                            @foreach (var user in _helper.GetUserByTopic(item.Id, 0, 3))
-                                            {
-                                                <img width="30" height="30" class="rounded-circle" src="@(user.Avt != "" ? user.Avt : "/assets/img/avatar.jpeg")" />
-                                            }
-                                            <span class="px-2 float-end">
-                                                <i class="fa-solid fa-arrow-right"></i>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
 
-                    }
-                }
+                <div class="col" v-for="(i) in skiptake(0, 3, topic)">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{i.name}}</h5>
+                            <a :href="'/topic/'+i.id" class="btn btn-primary">
+                                <div class="d-flex justify-content-start gap-2">
+                                    <img v-for="(_i) in skiptake(0, 3,user)" v-show="_i.topicId == i.id" width="30" height="30" class="rounded-circle" :src="_i.avt !='' ? _i.avt : '/assets/img/avatar.jpeg'" />
+                                    <span class="px-2 float-end">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
     </section>
 
 </main>
+
+@section Scripts {
+    <script>
+        new Vue({
+            el: "#topic",
+            data: {
+                topic: [],
+                user: []
+            },
+            mounted() {
+
+                let fieldId = window.location.pathname.split('/').pop();
+                console.log(fieldId)
+                fetch("/api/Topic")
+                    .then(res => res.json())
+                    .then(res => {
+                        let data = res.data
+                        this.topic = this.filterByFieldId(data, fieldId)
+
+                        console.log(this.topic)
+                    })
+
+                fetch("/api/Authencation/user_field?field=" + fieldId)
+                    .then(res => res.json())
+                    .then(res => {
+                        let data = res.data
+                        this.user = res.data
+                    })
+
+            },
+            methods: {
+                skiptake(skip, take, arr) {
+                    return arr.slice(skip, skip + take)
+                },
+                filterByFieldId(data, fieldId) {
+                    return data.filter(item => item.fieldId == fieldId);
+                }
+            },
+
+
+        })
+    </script>
+}

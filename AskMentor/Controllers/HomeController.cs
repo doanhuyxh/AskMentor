@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AskMentor.Controllers
 {
-
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -50,23 +50,13 @@ namespace AskMentor.Controllers
         public async Task<IActionResult> Field(int id)
         {
 
-            List<Topic> topics = _topicService.getTopicsListByFieldId(id);
-            return View(topics);
+            return View();
         }
         [HttpGet("topic/{id}")]
         public async Task<IActionResult> Topic(int id)
         {
 
-            List<ApplicationUser> Mentors = await helper.GetUserByRole("Mentor");
-            List<ApplicationUser> MentorsInTopic = new List<ApplicationUser>();
-            foreach (var item in Mentors)
-            {
-                if (item.TopicId == id)
-                {
-                    MentorsInTopic.Add(item);
-                }
-            }
-            return View(MentorsInTopic);
+            return View();
         }
 
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]

@@ -20,6 +20,15 @@ namespace AskMentor.Helper
         {
             return (List<ApplicationUser>)await _userManager.GetUsersInRoleAsync(role);
         }
+        public List<ApplicationUser> GetUserByField(int field)
+        {
+            return context.ApplicationUser.Where(i => i.FileId == field).ToList();
+        }
+        public List<ApplicationUser> GetUserByTopic(int topic)
+        {
+            return context.ApplicationUser.Where(i => i.TopicId == topic).ToList();
+        }
+
         public List<ApplicationUser> GetUserByTopic(int topicId, int skip, int take)
         {
             return context.ApplicationUser.Where(i => i.TopicId == topicId).Skip(skip).Take(take).ToList();

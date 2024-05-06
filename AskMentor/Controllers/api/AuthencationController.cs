@@ -4,6 +4,7 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
+using AskMentor.Helper;
 
 namespace AskMentor.Controllers.api
 {
@@ -164,6 +165,20 @@ namespace AskMentor.Controllers.api
             string path = await _helper.UpLoadCertificate(file.file);
             return Ok(new { status = true, message = "", data = path });
         }
+
+        [HttpGet("user_field")]
+        public IActionResult UserFiled(int field)
+        {
+            var Mentors = _helper.GetUserByField(field);
+            return Ok(new { status = true, message = "", data = Mentors });
+        }
+        [HttpGet("user_topic")]
+        public IActionResult UserTopic(int topic)
+        {
+            var Mentors = _helper.GetUserByTopic(topic);
+            return Ok(new { status = true, message = "", data = Mentors });
+        }
+
 
         [HttpPost("update_user")]
         public async Task<IActionResult> UpdateUser(UpdateUserInfo vm)

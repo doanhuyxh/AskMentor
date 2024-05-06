@@ -1,6 +1,4 @@
-﻿@inject AskMentor.Helper.Helper _helper;
-
-@if (ViewBag.Auth == "Auth")
+﻿@if (ViewBag.Auth == "Auth")
 {
     <header>
         <div class="top-header">
@@ -22,7 +20,7 @@
 }
 else
 {
-    <header>
+    <header id="header">
         <div class="top-header">
             <div class="nav-container">
                 <div class="nav-header-wrapper">
@@ -297,12 +295,10 @@ else
 
         <div class="bottom-header">
             <ul class="nav-bottom d-flex">
-                @foreach (var item in _helper.GetFields(0, 5))
-                {
-                    <li>
-                        <a href="/field/@item.Id">@item.Name</a>
-                    </li>
-                }
+
+                <li v-for="(i) in skiptake(0, 5, field)">
+                    <a :href="'/field/' + i.id">{{ i.name }}</a>
+                </li>
                 <li class="position-relative" id="moreWork">
                     <a href="javascript:void(0)" class="more">
                         More
@@ -311,12 +307,9 @@ else
                         </span>
                     </a>
                     <ul class="nav-dropdown-menu">
-                        @foreach (var item in _helper.GetFields(5, 5))
-                        {
-                            <li>
-                                <a href="/field/@item.Id">@item.Name</a>
-                            </li>
-                        }
+                        <li v-for="(_i) in skiptake(5, 5, field)">
+                            <a :href="'/field/' + _i.id">{{ _i.name }}</a>
+                        </li>
                         <li><a href="" class="up-n-link nav-menu-item">See all specializations</a></li>
                     </ul>
                 </li>
@@ -327,6 +320,26 @@ else
 }
 
 <script>
+
+    new Vue({
+        el: "#header",
+        data: {
+            field: [],
+        },
+        mounted() {
+            fetch("/api/Field")
+                .then(res => res.json())
+                .then(res => {
+                    this.field = res.data
+                })
+        },
+        methods: {
+            skiptake(skip, take, arr) {
+                return arr.slice(skip, skip + take)
+            }
+        }
+    })
+
     $(".nav-dropdown-menu").hide();
     $(document).ready(function () {
         $(".button-choose").click(function (event) {
